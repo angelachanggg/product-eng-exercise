@@ -9,6 +9,7 @@ export type TActiveFilters = {
 
 export type TFilter = {
   data: TDataTableRow[];
+  filterGroups: { [field: string]: string[] };
   showMenu: boolean;
   setShowFilterMenu: (maybeShow: boolean) => void;
   setFilteredRowData: (rowData: any[]) => void;

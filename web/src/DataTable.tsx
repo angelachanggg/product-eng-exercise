@@ -12,6 +12,7 @@ import cx from "classnames";
 import { useEffect, useRef, useState } from "react";
 import { TDataTableRow } from "./types";
 import { Filter } from "./Components/Filter";
+import { getMenuGroups } from "./utils";
 
 type Props<RowType> = {
   className?: string;
@@ -87,6 +88,7 @@ export function DataTable<RowType extends TDataTableRow>({
       <Filter 
         ref={filterMenuRef} 
         data={rowData}
+        filterGroups={getMenuGroups(rowData, ["importance", "type", "customer"])}
         showMenu={showFilterMenu} 
         setShowFilterMenu={setShowFilterMenu}
         setFilteredRowData={setFilteredRowData}

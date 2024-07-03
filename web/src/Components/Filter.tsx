@@ -1,36 +1,13 @@
 import { forwardRef, useEffect, useState } from "react";
 import { IconListBullet } from "../Icons/IconListBullet";
 import { pluralize } from "../utils";
-import { TActiveFilters, TDataTableRow, TFilter, TFilterMenu } from "../types";
+import { TActiveFilters, TDataTableRow, TFilter } from "../types";
 import { IconXMark } from "../Icons/IconXMark";
 import { Menu } from "./Menu";
 
-function getMenuGroups(data: TDataTableRow[]): TFilterMenu["data"] {
-  const filterTypes = ["importance", "type", "customer"]
-  const filterMenuData: any = {};
-
-  data.forEach(item => {
-    Object.keys(item).forEach(key => {
-      if(filterTypes.includes(key)) {
-        if (!filterMenuData[key]) {
-          filterMenuData[key] = new Set();
-        }
-        filterMenuData[key].add(item[key]);
-      }
-    });
-  });
-
-  Object.keys(filterMenuData).forEach(key => {
-    filterMenuData[key] = Array.from(filterMenuData[key]);
-  });
-  return filterMenuData;
-}
-
-export const Filter = forwardRef<HTMLDivElement, TFilter>(({data, showMenu, setShowFilterMenu, setFilteredRowData}, ref) => {
+export const Filter = forwardRef<HTMLDivElement, TFilter>(({data, filterGroups, showMenu, setShowFilterMenu, setFilteredRowData}, ref) => {
   const [activeFilters, setActiveFilters] = useState<TActiveFilters[]>([]);
   const [results, setResults] = useState<number>(data.length);
-
-  const menuData: TFilterMenu["data"] = getMenuGroups(data);
 
   useEffect(() => {
     if(activeFilters.length === 0) {
@@ -97,7 +74,7 @@ export const Filter = forwardRef<HTMLDivElement, TFilter>(({data, showMenu, setS
         </>
 
         <div ref={ref} className="absolute top-14 left-0 z-50">
-          {showMenu && <Menu activeFilters={activeFilters} setActiveFilters={setActiveFilters} data={menuData}/>} 
+          {showMenu && <Menu activeFilters={activeFilters} setActiveFilters={setActiveFilters} data={filterGroups}/>} 
         </div>
       </div>
     );
