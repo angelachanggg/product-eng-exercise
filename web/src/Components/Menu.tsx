@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { TDropdown, TFilterGroup, TFilterSubgroupButton } from "./types";
+import { TFilterMenu, TFilterGroup, TFilterSubgroupButton } from "../types";
 
-function MenuSubgroup({
+function MenuGroupItem({
   activeFilters, 
   groupName, 
-  subgroupName, 
+  groupItem,
   setActiveFilters
 }: TFilterSubgroupButton) {    
-  const [isChecked, setIsChecked] = useState<boolean>(activeFilters.reduce((acc, badge) => {
-    if (badge.subgroup === subgroupName) {
+  const [isChecked, setIsChecked] = useState<boolean>(activeFilters.reduce((acc, filter) => {
+    if (filter.item === groupItem) {
       acc = true;
     }
     return acc;
@@ -16,9 +16,9 @@ function MenuSubgroup({
 
   const handleClick = () => {
     if (!isChecked) {
-      setActiveFilters([...activeFilters, { "group": groupName, "subgroup": subgroupName }])
+      setActiveFilters([...activeFilters, { "group": groupName, "item": groupItem }])
     } else {
-      setActiveFilters(activeFilters.filter((badge) => { return badge.subgroup !== subgroupName }));
+      setActiveFilters(activeFilters.filter((filter) => { return filter.item !== groupItem }));
     }
     setIsChecked(!isChecked);
   }
@@ -30,13 +30,13 @@ function MenuSubgroup({
     >
       <input 
         type="checkbox" 
-        name={subgroupName} 
-        id={subgroupName} 
+        name={groupItem} 
+        id={groupItem} 
         className="px-1 hover:cursor-pointer" 
         checked={isChecked} 
         onChange={() => {}} 
       />
-      <label htmlFor={subgroupName} className="px-1 hover:cursor-pointer" onClick={handleClick}>{subgroupName}</label>
+      <label htmlFor={groupItem} className="px-1 hover:cursor-pointer" onClick={handleClick}>{groupItem}</label>
     </div>
   )
 }
@@ -45,22 +45,22 @@ function MenuGroup({
   activeFilters, 
   name, 
   setActiveFilters, 
-  subgroups = [] 
+  groupItems = [] 
 }: TFilterGroup) {
-  const [showSubgroups, setShowSubgroups] = useState<boolean>(false);
+  const [showGroupItems, setShowGroupItems] = useState<boolean>(false);
   
   return (
     <li className="w-full">
-      <button className="flex justify-left align-center w-full h-full hover:bg-sky-100" onClick={() => setShowSubgroups(true)}>
+      <button className="flex justify-left align-center w-full h-full hover:bg-sky-100" onClick={() => setShowGroupItems(true)}>
         <div className="mx-4">{name}</div>
       </button>
 
-      {showSubgroups && (
+      {showGroupItems && (
         <>
-          {subgroups.map((subgroupName) => {
+          {groupItems.map((item) => {
             return (
-              <React.Fragment key={subgroupName}>
-                <MenuSubgroup activeFilters={activeFilters} setActiveFilters={setActiveFilters} groupName={name} subgroupName={subgroupName} />
+              <React.Fragment key={item}>
+                <MenuGroupItem activeFilters={activeFilters} setActiveFilters={setActiveFilters} groupName={name} groupItem={item} />
               </React.Fragment>
             );
           })}
@@ -74,13 +74,13 @@ export function Menu({
   data, 
   activeFilters, 
   setActiveFilters
-}: TDropdown) {
+}: TFilterMenu) {
   return (
     <menu className="relative flex flex-col align-left top-0 left-0 rounded-lg border bg-slate-50 w-64 py-2">
       {Object.keys(data).map((key) => {
         return (
           <React.Fragment key={key}>
-            <MenuGroup activeFilters={activeFilters} setActiveFilters={setActiveFilters} name={key.charAt(0).toUpperCase() + key.slice(1)} subgroups={data[key]} />
+            <MenuGroup activeFilters={activeFilters} setActiveFilters={setActiveFilters} name={key.charAt(0).toUpperCase() + key.slice(1)} groupItems={data[key]} />
           </React.Fragment>
         );
       })}

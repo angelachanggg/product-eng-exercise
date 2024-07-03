@@ -1,9 +1,20 @@
-export type TActiveFilters = {
-    group: string;
-    subgroup: string;
+export type TDataTableRow = {
+  [field: string] : string;
 }
 
-export type TDropdown = {
+export type TActiveFilters = {
+    group: string;
+    item: string;
+}
+
+export type TFilter = {
+  data: TDataTableRow[];
+  showMenu: boolean;
+  setShowFilterMenu: (maybeShow: boolean) => void;
+  setFilteredRowData: (rowData: any[]) => void;
+}
+
+export type TFilterMenu = {
   data: { [field: string]: string[] }, 
   activeFilters: TActiveFilters[], 
   setActiveFilters: (badges: TActiveFilters[]) => void
@@ -13,12 +24,16 @@ export type TFilterGroup = {
   activeFilters: TActiveFilters[], 
   name: string,
   setActiveFilters: (badges: TActiveFilters[]) => void, 
-  subgroups?: string[]
+  groupItems?: string[]
 }
 
 export type TFilterSubgroupButton = {
   activeFilters: TActiveFilters[], 
   groupName: string, 
-  subgroupName: string, 
+  groupItem: string, 
   setActiveFilters: (badges: TActiveFilters[]) => void
 };
+
+export type TIcon = {
+  style?: string;
+}
